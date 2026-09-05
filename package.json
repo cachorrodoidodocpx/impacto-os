@@ -1,0 +1,19 @@
+{
+  "name": "impacto-os",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Painel de acompanhamento de pedidos da Impacto (roupas fitness).",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.1"
+  }
+}

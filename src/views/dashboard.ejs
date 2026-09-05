@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<%- include('partials/admin-head', { title: 'Pedidos' }) %>
+<body class="admin">
+<%
+function badgeClass(status) {
+  if (status === 'aguardando_pagamento') return 'badge-pending';
+  if (status === 'pago') return 'badge-paid';
+  if (status === 'pronto') return 'badge-done';
+  if (status === canceled) return 'badge-canceled';
+  return 'badge-progress';
+}
+function formatMoney(n) {
+  return 'R$ ' + Number(n || 0).toFixed(2).replace('.', ',');
+}
+function formatDate(d) {
+  if (!d) return '—';
+  const [y, m, day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+%>
+<%- include('partials/admin-nav') %>
+<div class="wrap">
+
+  <div class="stats-row">
+    <a href="/admin" class="stat-chip <%= activeStatus === '' ? 'is-active' : '' %>">
+      <span class="n"><%= Object.values(counts).reduce((a,b)=>a+b,0) %></span>
+      <span class="label">Todos os pedidos</span>
+    </a>
+    <% stages.forEach(function(stage) { %>
+    <a href="/admin?status=<%= stage.key %>" class="stat-chip <%= activeStatus === stage.key ? 'is-active' : '' %>">
+      <span class="n"><%= counts[stage.key] || 0 %></span>
+      <span class="label"><%= stage.short %></span>
+    </a>
+    <% }); %>
+    <a href="/admin?status=<%= canceled %>" class="stat-chip <%= activeStatus === canceled ? 'is-active' : '' %>">
+      <span class="n"><%= counts[canceled] || 0 %></span>
+      <span class="label">Cancelados</span>
+    </a>
+  </div>
+
+  <form class="toolbar" method="GET" action="/admin">
+    <input type="text" name="q" placeholder="Buscar por cliente ou pedido..." value="<%= query %>" />
+    <% if (activeStatus) { %>
+    <input type="hidden" name="status" value="<%= activeStatus %>" />
+    <% } %>
+    <button type="submit" class="btn btn-ghost">Buscar</button>
+  </form>
+
+  <div class="panel" style="padding: 0; overflow-x: auto;">
+    <% if (orders.length === 0) { %>
+    <div class="empty-state">
+      <p>Nenhum pedido encontrado por aqui.</p>
+      <a href="/admin/pedidos/novo" class="btn btn-flame">Cadastrar o primeiro pedido</a>
+    </div>
+    <% } else { %>
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Pedido</th>
+          <th>Status</th>
+          <th>Valor</th>
+          <th>Prazo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(function(order) { %>
+        <tr class="js-row-link" data-href="/admin/pedidos/<%= order.id %>">
+          <td>
+            <a class="row-link" href="/admin/pedidos/<%= order.id %>">
+              <div class="client"><%= order.clientName %></div>
+            </a>
+            <div class="muted"><%= order.clientPhone || 'sem telefone' %></div>
+          </td>
+          <td><%= order.orderTitle %></td>
+          <td>
+            <span class="badge <%= badgeClass(order.status) %>">
+              <%= stageInfo(order.status).short %>
+            </span>
+          </td>
+          <td><%= formatMoney(order.price) %></td>
+          <td><%= formatDate(order.deadline) %></td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <% } %>
+  </div>
+</div>
+<script src="/js/app.js"></script>
+</body>
+</html>

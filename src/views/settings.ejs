@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<%- include('partials/admin-head', { title: 'Configurações' }) %>
+<body class="admin">
+<%- include('partials/admin-nav') %>
+<div class="wrap">
+  <a href="/admin" class="back-link">&larr; Voltar para os pedidos</a>
+
+  <% if (saved) { %>
+  <div class="alert alert-success">Configurações salvas.</div>
+  <% } %>
+
+  <div class="panel">
+    <h2>Dados da Impacto</h2>
+    <form method="POST" action="/admin/configuracoes">
+      <div class="field">
+        <label for="companyName">Nome exibido para o cliente</label>
+        <input type="text" id="companyName" name="companyName" value="<%= settings.companyName %>" />
+      </div>
+
+      <div class="form-row">
+        <div class="field">
+          <label for="pixKey">Chave Pix</label>
+          <input type="text" id="pixKey" name="pixKey" value="<%= settings.pixKey %>" placeholder="CPF, e-mail, telefone ou chave aleatória" />
+          <p class="hint">Aparece na página do cliente enquanto o pedido está aguardando pagamento.</p>
+        </div>
+        <div class="field">
+          <label for="pixName">Nome do titular da chave (opcional)</label>
+          <input type="text" id="pixName" name="pixName" value="<%= settings.pixName %>" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="supportPhone">WhatsApp de suporte (opcional)</label>
+        <input type="tel" id="supportPhone" name="supportPhone" value="<%= settings.supportPhone %>" placeholder="Ex: 41 99999-0000" />
+      </div>
+
+      <div class="field">
+        <label for="welcomeMessage">Recado para o cliente (opcional)</label>
+        <textarea id="welcomeMessage" name="welcomeMessage" placeholder="Ex: Qualquer dúvida, chama no WhatsApp!"><%= settings.welcomeMessage %></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-flame">Salvar configurações</button>
+    </form>
+  </div>
+</div>
+<script src="/js/app.js"></script>
+</body>
+</html>

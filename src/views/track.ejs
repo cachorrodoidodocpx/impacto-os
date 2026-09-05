@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= order.clientName %> · <%= settings.companyName || 'Impacto' %></title>
+  <meta name="theme-color" content="#f6f4ef" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/track.css" />
+</head>
+<body class="track">
+<%
+function formatMoney(n) {
+  return 'R$ ' + Number(n || 0).toFixed(2).replace('.', ',');
+}
+function formatDateShort(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+}
+function formatDeadline(d) {
+  if (!d) return '—';
+  const [y, m, day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+
+let bannerText = '';
+let bannerClass = '';
+if (isCanceled) {
+  bannerText = 'Pedido cancelado';
+  bannerClass = 'is-canceled';
+} else if (order.status === 'aguardando_pagamento') {
+  bannerText = 'Aguardando confirmação do pagamento';
+} else if (order.status === 'pago') {
+  bannerText = 'Pagamento confirmado — produção vai começar';
+} else if (order.status === 'pronto') {
+  bannerText = 'Pronto!';
+  bannerClass = 'is-done';
+} else {
+  bannerText = `Em produção — etapa atual: ${currentStage.label}`;
+}
+%>
+  <div class="track-wrap">
+    <div class="track-brand"><span class="dot"></span><%= settings.companyName || 'Impacto' %></div>
+
+    <div class="track-hero">
+      <p class="kicker">Pedido de</p>
+      <h1><%= order.clientName %></h1>
+      <p class="order-title"><%= order.orderTitle %></p>
+      <span class="status-banner <%= bannerClass %>"><%= bannerText %></span>
+    </div>
+
+    <% if (!isCanceled) { %>
+    <div class="track-section">
+      <h2>Acompanhe a produção</h2>
+      <ul class="track-list">
+        <% steps.forEach(function(step) { %>
+        <li class="is-<%= step.state %>">
+          <span class="track-dot"></span>
+          <div class="step-label"><%= step.label %></div>
+          <% if (step.state === 'done' && step.at) { %>
+          <div class="step-date"><%= formatDateShort(step.at) %></div>
+          <% } else if (step.state === 'current') { %>
+          <span class="step-current-tag">Em andamento agora</span>
+          <% } %>
+        </li>
+        <% }); %>
+      </ul>
+    </div>
+    <% } %>
+
+    <div class="track-section">
+      <h2>Detalhes do pedido</h2>
+      <% if (order.description) { %>
+      <p class="description-block"><%= order.description %></p>
+      <% } %>
+      <div class="detail-row">
+        <span class="k">Valor total</span>
+        <span class="v"><%= formatMoney(order.price) %></span>
+      </div>
+      <div class="detail-row">
+        <span class="k">Previsão de entrega</span>
+        <span class="v">
+          <%= formatDeadline(order.deadline) %>
+          <% if (typeof daysLeft === 'number' && !isCanceled && order.status !== 'pronto') { %>
+            <% if (daysLeft > 0) { %> (faltam <%= daysLeft %> dia<%= daysLeft === 1 ? '' : 's' %>)<% } %>
+            <% if (daysLeft === 0) { %> (é hoje)<% } %>
+            <% if (daysLeft < 0) { %> (em atraso)<% } %>
+          <% } %>
+        </span>
+      </div>
+    </div>
+
+    <% if (!isCanceled && order.status === 'aguardando_pagamento' && settings.pixKey) { %>
+    <div class="track-section pix-section">
+      <h2>Pagamento via Pix</h2>
+      <div class="pix-key-box">
+        <code><%= settings.pixKey %></code>
+        <button class="copy-btn js-copy" data-copy-text="<%= settings.pixKey %>" data-label-default="Copiar" data-label-copied="Copiado!">Copiar</button>
+      </div>
+      <p class="pix-note">
+        <% if (settings.pixName) { %>Chave em nome de <%= settings.pixName %>. <% } %>
+        Depois de pagar, envie o comprovante pelo WhatsApp para liberarmos a produção.
+      </p>
+    </div>
+    <% } %>
+
+    <% if (settings.welcomeMessage) { %>
+    <div class="track-section">
+      <p class="description-block" style="margin:0;"><%= settings.welcomeMessage %></p>
+    </div>
+    <% } %>
+
+    <div class="track-footer">Feito na <%= settings.companyName || 'Impacto' %>.</div>
+  </div>
+  <script src="/js/app.js"></script>
+</body>
+</html>

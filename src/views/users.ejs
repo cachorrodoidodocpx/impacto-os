@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<%- include('partials/admin-head', { title: 'Usuários' }) %>
+<body class="admin">
+<%- include('partials/admin-nav') %>
+<div class="wrap">
+  <a href="/admin" class="back-link">&larr; Voltar para os pedidos</a>
+
+  <% if (created) { %>
+  <div class="alert alert-success">Usuário criado com sucesso.</div>
+  <% } %>
+  <% if (deleted) { %>
+  <div class="alert alert-success">Usuário removido.</div>
+  <% } %>
+  <% if (error) { %>
+  <div class="alert alert-error"><%= error %></div>
+  <% } %>
+
+  <div class="panel">
+    <h2>Quem acessa o painel</h2>
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th>Usuário</th>
+          <th>Criado em</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% admins.forEach(function(a) { %>
+        <tr>
+          <td>
+            <span class="client"><%= a.username %></span>
+            <% if (a.id === currentAdminId) { %><span class="muted"> (você)</span><% } %>
+          </td>
+          <td class="muted"><%= new Date(a.createdAt).toLocaleDateString('pt-BR') %></td>
+          <td style="text-align: right;">
+            <% if (admins.length > 1 && a.id !== currentAdminId) { %>
+            <form method="POST" action="/admin/usuarios/<%= a.id %>/excluir"
+              data-confirm="Remover o acesso de &quot;<%= a.username %>&quot;? Essa pessoa não vai mais conseguir entrar no painel.">
+              <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+            </form>
+            <% } %>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="panel">
+    <h2>Adicionar novo usuário</h2>
+    <form method="POST" action="/admin/usuarios">
+      <div class="form-row">
+        <div class="field">
+          <label for="username">Usuário</label>
+          <input type="text" id="username" name="username" required autofocus placeholder="Ex: maria" />
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <input type="password" id="password" name="password" required minlength="6" />
+        </div>
+      </div>
+      <div class="field">
+        <label for="passwordConfirm">Confirmar senha</label>
+        <input type="password" id="passwordConfirm" name="passwordConfirm" required minlength="6" />
+      </div>
+      <p class="hint" style="margin-bottom: 18px;">A senha precisa ter pelo menos 6 caracteres.</p>
+      <button type="submit" class="btn btn-flame">Criar usuário</button>
+    </form>
+  </div>
+</div>
+<script src="/js/app.js"></script>
+</body>
+</html>

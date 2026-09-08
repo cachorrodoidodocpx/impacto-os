@@ -34,6 +34,7 @@ app.use(
 
 app.use((req, res, next) => {
   res.locals.isAdmin = !!(req.session && req.session.isAdmin);
+  res.locals.adminUsername = (req.session && req.session.adminUsername) || null;
   next();
 });
 
@@ -51,7 +52,18 @@ app.use((err, req, res, next) => {
   res.status(500).send('Algo deu errado no servidor. Confira os logs do Railway.');
 });
 
+const db = require('./db');
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Impacto OS rodando na porta ${PORT}`);
+
+async function start() {
+  await db.ensureSchema();
+  app.listen(PORT, () => {
+    console.log(`Impacto OS rodando na porta ${PORT}`);
+  });
+}
+
+start().catch((err) => {
+  console.error('Não consegui conectar ou preparar o banco de dados Postgres:', err.message);
+  console.error('Confira se a variável DATABASE_URL está configurada corretamente.');
+  process.exit(1);
 });

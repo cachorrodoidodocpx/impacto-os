@@ -1,0 +1,91 @@
+{
+  "settings": {
+    "companyName": "Impacto",
+    "pixKey": "04036398245",
+    "pixName": "VICTOR",
+    "supportPhone": "48991897715",
+    "welcomeMessage": "QUALQUER DUVIDA WPP"
+  },
+  "orders": {
+    "4b7201c7-504e-46cf-bd68-bf2f920c0105": {
+      "id": "4b7201c7-504e-46cf-bd68-bf2f920c0105",
+      "clientName": "JULIA",
+      "clientPhone": "48991897715",
+      "orderTitle": "2 CONJUNTOS DIVIDO ROSA",
+      "description": "2 TOP NADAOR ROSA\r\n2 SHORT RUN ROSA\r\nCOS DO SHORT DOIS DEDO MAIOR",
+      "price": 290.99,
+      "deadline": "2026-09-07",
+      "status": "cancelado",
+      "pixKeySnapshot": "04036398245",
+      "createdAt": "2026-09-05T13:31:39.503Z",
+      "updatedAt": "2026-09-05T13:41:35.102Z",
+      "paidAt": "2026-09-05T13:39:43.655Z",
+      "finishedAt": null,
+      "canceledAt": "2026-09-05T13:41:35.102Z",
+      "history": [
+        {
+          "status": "aguardando_pagamento",
+          "at": "2026-09-05T13:31:39.503Z"
+        },
+        {
+          "status": "pago",
+          "at": "2026-09-05T13:39:43.655Z"
+        },
+        {
+          "status": "cancelado",
+          "at": "2026-09-05T13:41:35.102Z"
+        }
+      ]
+    },
+    "e965d3ae-efef-47f8-8605-614b073d8502": {
+      "id": "e965d3ae-efef-47f8-8605-614b073d8502",
+      "clientName": "rafa",
+      "clientPhone": "48991897715",
+      "orderTitle": "TOP RAFA ROXO",
+      "description": "TAMANHO P\r\nCOR ROXO\r\nCOS DOIS DEDO MENOR",
+      "price": 149.9,
+      "deadline": "2026-09-07",
+      "status": "pronto",
+      "pixKeySnapshot": "04036398245",
+      "createdAt": "2026-09-05T13:35:49.565Z",
+      "updatedAt": "2026-09-05T13:38:35.175Z",
+      "paidAt": "2026-09-05T13:36:37.638Z",
+      "finishedAt": "2026-09-05T13:38:35.175Z",
+      "canceledAt": null,
+      "history": [
+        {
+          "status": "aguardando_pagamento",
+          "at": "2026-09-05T13:35:49.565Z"
+        },
+        {
+          "status": "pago",
+          "at": "2026-09-05T13:36:37.638Z"
+        },
+        {
+          "status": "corte",
+          "at": "2026-09-05T13:37:11.100Z"
+        },
+        {
+          "status": "costura",
+          "at": "2026-09-05T13:37:26.028Z"
+        },
+        {
+          "status": "silk",
+          "at": "2026-09-05T13:38:01.708Z"
+        },
+        {
+          "status": "revisao",
+          "at": "2026-09-05T13:38:11.869Z"
+        },
+        {
+          "status": "embalagem",
+          "at": "2026-09-05T13:38:27.239Z"
+        },
+        {
+          "status": "pronto",
+          "at": "2026-09-05T13:38:35.175Z"
+        }
+      ]
+    }
+  }
+}

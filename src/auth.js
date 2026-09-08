@@ -1,20 +1,12 @@
-const crypto = require('crypto');
+const db = require('./db');
+const { verifyPassword } = require('./passwords');
 
-function safeCompare(a, b) {
-  const bufA = Buffer.from(String(a || ''));
-  const bufB = Buffer.from(String(b || ''));
-  if (bufA.length !== bufB.length) {
-    // Ainda gasta um tempo comparável para não vazar tamanho via timing.
-    crypto.timingSafeEqual(Buffer.alloc(bufA.length), Buffer.alloc(bufA.length));
-    return false;
-  }
-  return crypto.timingSafeEqual(bufA, bufB);
-}
-
-function checkCredentials(username, password) {
-  const validUser = safeCompare(username, process.env.ADMIN_USERNAME || 'admin');
-  const validPass = safeCompare(password, process.env.ADMIN_PASSWORD || 'impacto123');
-  return validUser && validPass;
+// Retorna o registro do admin (sem a senha) se as credenciais baterem, ou null.
+async function checkCredentials(username, password) {
+  if (!username || !password) return null;
+  const admin = await db.getAdminByUsername(String(username).trim());
+  if (!admin) return null;
+  return verifyPassword(password, admin.passwordHash) ? { id: admin.id, username: admin.username } : null;
 }
 
 function requireAuth(req, res, next) {
